@@ -13,8 +13,8 @@
 
 import { readFile } from 'node:fs/promises';
 import { resolveDefaultAgentId } from 'openclaw/plugin-sdk/agent-runtime';
-import type { ReplyPayload } from 'openclaw/plugin-sdk';
 import { SILENT_REPLY_TOKEN } from 'openclaw/plugin-sdk/reply-runtime';
+import type { ReplyPayload } from '../types/plugin-sdk-types';
 import { extractLarkApiCode } from '../core/api-error';
 import { larkLogger } from '../core/lark-logger';
 import { LarkClient } from '../core/lark-client';

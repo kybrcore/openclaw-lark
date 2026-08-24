@@ -13,9 +13,9 @@
  */
 
 import * as crypto from 'node:crypto';
-import type { ClawdbotConfig, RuntimeEnv } from 'openclaw/plugin-sdk';
 import type { HistoryEntry } from 'openclaw/plugin-sdk/reply-history';
 import { DEFAULT_GROUP_HISTORY_LIMIT } from 'openclaw/plugin-sdk/reply-history';
+import type { ClawdbotConfig, RuntimeEnv } from '../../types/plugin-sdk-types';
 import type { FeishuDriveCommentEvent, MessageContext } from '../types';
 import { getLarkAccount } from '../../core/accounts';
 import { buildFeishuCommentTarget } from '../../core/comment-target';
@@ -181,8 +181,7 @@ export async function handleFeishuCommentEvent(params: {
   // Fall back to the resolved comment text, where @mentions are normalized
   // into "@<open_id>" by extractElementText().
   const eventMentioned = event.notice_meta?.is_mentioned ?? event.is_mention;
-  const textMentioned =
-    Boolean(botOpenId) && Boolean(turn.commentText?.includes(`@${botOpenId}`));
+  const textMentioned = Boolean(botOpenId) && Boolean(turn.commentText?.includes(`@${botOpenId}`));
   if (eventMentioned !== true && !textMentioned) {
     log(
       `feishu[${accountId}]: comment event not mentioning bot, skipping` +
@@ -243,10 +242,7 @@ export async function handleFeishuCommentEvent(params: {
     `feishu[${accountId}]: comment event on ${commentId}` +
       `${event.reply_id ? ` (reply ${event.reply_id})` : ''}, dispatching to agent`,
   );
-  logger.info(
-    `comment event on ${commentId}` +
-      `${event.reply_id ? ` (reply ${event.reply_id})` : ''}`,
-  );
+  logger.info(`comment event on ${commentId}` + `${event.reply_id ? ` (reply ${event.reply_id})` : ''}`);
 
   const historyLimit = Math.max(
     0,

@@ -9,9 +9,16 @@
  * 2. 传 user_id: 获取指定用户的信息 (sdk.contact.v3.user.get)
  */
 
-import type { OpenClawPluginApi } from 'openclaw/plugin-sdk';
 import { Type } from '@sinclair/typebox';
-import { StringEnum, assertLarkOk, createToolContext, handleInvokeErrorWithAutoAuth, json, registerTool } from '../helpers';
+import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
+import {
+  StringEnum,
+  assertLarkOk,
+  createToolContext,
+  handleInvokeErrorWithAutoAuth,
+  json,
+  registerTool,
+} from '../helpers';
 
 // ---------------------------------------------------------------------------
 // Schema
@@ -146,5 +153,4 @@ export function registerGetUserTool(api: OpenClawPluginApi): void {
     },
     { name: 'feishu_get_user' },
   );
-
 }

@@ -12,16 +12,10 @@
  *   - create: POST /open-apis/wiki/v2/spaces
  */
 
-import type { OpenClawPluginApi } from 'openclaw/plugin-sdk';
 import { Type } from '@sinclair/typebox';
+import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 
-import {
-  assertLarkOk,
-  createToolContext,
-  handleInvokeErrorWithAutoAuth,
-  json,
-  registerTool,
-} from '../helpers';
+import { assertLarkOk, createToolContext, handleInvokeErrorWithAutoAuth, json, registerTool } from '../helpers';
 import type { PaginatedData } from '../sdk-types';
 
 // ---------------------------------------------------------------------------

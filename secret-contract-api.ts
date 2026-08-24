@@ -18,43 +18,41 @@ import type {
   SecretDefaults,
   SecretTargetRegistryEntry,
 } from 'openclaw/plugin-sdk/channel-secret-basic-runtime';
-import type { OpenClawConfig } from 'openclaw/plugin-sdk';
+import type { OpenClawConfig } from './src/types/plugin-sdk-types';
 
 const SECRET_FIELDS = ['appSecret', 'encryptKey', 'verificationToken'] as const;
 
 /** Fields the Lark SDK only consumes when an account is in webhook mode. */
 const WEBHOOK_ONLY_FIELDS = ['encryptKey', 'verificationToken'] as const;
 
-export const secretTargetRegistryEntries: readonly SecretTargetRegistryEntry[] = SECRET_FIELDS.flatMap(
-  (field) => {
-    const acctPath = `channels.feishu.accounts.*.${field}`;
-    const topPath = `channels.feishu.${field}`;
-    return [
-      {
-        id: acctPath,
-        targetType: acctPath,
-        configFile: 'openclaw.json',
-        pathPattern: acctPath,
-        secretShape: 'secret_input',
-        expectedResolvedValue: 'string',
-        includeInPlan: true,
-        includeInConfigure: true,
-        includeInAudit: true,
-      },
-      {
-        id: topPath,
-        targetType: topPath,
-        configFile: 'openclaw.json',
-        pathPattern: topPath,
-        secretShape: 'secret_input',
-        expectedResolvedValue: 'string',
-        includeInPlan: true,
-        includeInConfigure: true,
-        includeInAudit: true,
-      },
-    ];
-  },
-);
+export const secretTargetRegistryEntries: readonly SecretTargetRegistryEntry[] = SECRET_FIELDS.flatMap((field) => {
+  const acctPath = `channels.feishu.accounts.*.${field}`;
+  const topPath = `channels.feishu.${field}`;
+  return [
+    {
+      id: acctPath,
+      targetType: acctPath,
+      configFile: 'openclaw.json',
+      pathPattern: acctPath,
+      secretShape: 'secret_input',
+      expectedResolvedValue: 'string',
+      includeInPlan: true,
+      includeInConfigure: true,
+      includeInAudit: true,
+    },
+    {
+      id: topPath,
+      targetType: topPath,
+      configFile: 'openclaw.json',
+      pathPattern: topPath,
+      secretShape: 'secret_input',
+      expectedResolvedValue: 'string',
+      includeInPlan: true,
+      includeInConfigure: true,
+      includeInAudit: true,
+    },
+  ];
+});
 
 export function collectRuntimeConfigAssignments(params: {
   config: OpenClawConfig;
@@ -77,12 +75,9 @@ export function collectRuntimeConfigAssignments(params: {
     accountInactiveReason: 'Feishu account is disabled.',
   });
 
-  const baseConnectionMode =
-    normalizeSecretStringValue(channel.connectionMode) === 'webhook' ? 'webhook' : 'websocket';
+  const baseConnectionMode = normalizeSecretStringValue(channel.connectionMode) === 'webhook' ? 'webhook' : 'websocket';
   const resolveAccountMode = (account: Record<string, unknown>): string | undefined =>
-    hasOwnProperty(account, 'connectionMode')
-      ? normalizeSecretStringValue(account.connectionMode)
-      : baseConnectionMode;
+    hasOwnProperty(account, 'connectionMode') ? normalizeSecretStringValue(account.connectionMode) : baseConnectionMode;
 
   for (const field of WEBHOOK_ONLY_FIELDS) {
     collectConditionalChannelFieldAssignments({

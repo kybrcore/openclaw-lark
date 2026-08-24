@@ -7,7 +7,6 @@
  * 从 package.json 读取版本号并生成 User-Agent 字符串。
  */
 
-import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { readFileSync } from 'node:fs';
 
@@ -24,9 +23,10 @@ export function getPluginVersion(): string {
 
   try {
     // 当前文件: src/core/version.ts → 向上两级到达项目根目录
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = dirname(__filename);
-    const packageJsonPath = join(__dirname, '..', '..', 'package.json');
+    // Use the CJS-native __filename: the published package ships CJS output, and
+    // any `import.meta` token — even in dead branches — flips Node's module-syntax
+    // detection to ESM, yielding an empty module namespace (see #605 block 2).
+    const packageJsonPath = join(dirname(__filename), '..', '..', 'package.json');
 
     const raw = readFileSync(packageJsonPath, 'utf8');
     const pkg = JSON.parse(raw) as { version?: string };

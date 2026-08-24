@@ -8,8 +8,8 @@
  * 复用 oauth.ts 的 executeAuthorize() 函数。
  */
 
-import type { OpenClawPluginApi } from 'openclaw/plugin-sdk';
 import { Type } from '@sinclair/typebox';
+import type { OpenClawPluginApi } from '../types/plugin-sdk-types';
 import { getAppGrantedScopes } from '../core/app-scope-checker';
 import { AppScopeCheckFailedError } from '../core/tool-client';
 import { getStoredToken } from '../core/token-store';

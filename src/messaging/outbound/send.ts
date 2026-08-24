@@ -5,8 +5,8 @@
  * Message sending for the Lark/Feishu channel plugin.
  */
 
-import type { ClawdbotConfig } from 'openclaw/plugin-sdk';
-import type { FeishuSendResult, MentionInfo  } from '../types';
+import type { ClawdbotConfig } from '../../types/plugin-sdk-types';
+import type { FeishuSendResult, MentionInfo } from '../types';
 import { getLarkAccount } from '../../core/accounts';
 import { LarkClient } from '../../core/lark-client';
 import { larkLogger } from '../../core/lark-logger';

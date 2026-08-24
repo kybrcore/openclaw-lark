@@ -8,7 +8,7 @@
  * to these for its `sendText` and `sendMedia` implementations.
  */
 
-import type { ClawdbotConfig } from 'openclaw/plugin-sdk';
+import type { ClawdbotConfig } from '../../types/plugin-sdk-types';
 import type { FeishuSendResult } from '../types';
 import { getLarkAccount } from '../../core/accounts';
 import { LarkClient } from '../../core/lark-client';
@@ -503,9 +503,7 @@ export async function sendCommentReplyLark(params: SendCommentReplyLarkParams): 
     throw new Error(`Not a valid comment target: "${to}"`);
   }
 
-  log.info(
-    `sendCommentReplyLark: mode=${target.deliveryMode}, comment=${target.commentId}, textLength=${text.length}`,
-  );
+  log.info(`sendCommentReplyLark: mode=${target.deliveryMode}, comment=${target.commentId}, textLength=${text.length}`);
 
   const client = LarkClient.fromCfg(cfg, accountId);
   const elements = [{ type: 'text_run', text_run: { text } }];

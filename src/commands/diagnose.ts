@@ -14,14 +14,13 @@ import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import * as os from 'node:os';
 
-import type { OpenClawConfig } from 'openclaw/plugin-sdk';
-
 interface DiagLogger {
   info: (message: string) => void;
   warn: (message: string) => void;
   error: (message: string) => void;
 }
 import type * as Lark from '@larksuiteoapi/node-sdk';
+import type { OpenClawConfig } from '../types/plugin-sdk-types';
 
 import { probeFeishu } from '../channel/probe';
 import { getEnabledLarkAccounts, getLarkAccount, getLarkAccountIds } from '../core/accounts';

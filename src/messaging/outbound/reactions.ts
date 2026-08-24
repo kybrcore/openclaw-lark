@@ -8,7 +8,7 @@
  * messages using the IM Message Reaction API.
  */
 
-import type { OpenClawConfig } from 'openclaw/plugin-sdk';
+import type { OpenClawConfig } from '../../types/plugin-sdk-types';
 import { LarkClient } from '../../core/lark-client';
 
 // ---------------------------------------------------------------------------
@@ -318,7 +318,9 @@ export async function addReactionFeishu(params: {
     const errCode = e.code ?? e.response?.data?.code;
     if (errCode === 231001) {
       const validTypes = Array.from(VALID_FEISHU_EMOJI_TYPES).join(', ');
-      throw new Error(`Emoji type "${emojiType}" is not a valid Feishu reaction. Valid types: ${validTypes}`, { cause: err });
+      throw new Error(`Emoji type "${emojiType}" is not a valid Feishu reaction. Valid types: ${validTypes}`, {
+        cause: err,
+      });
     }
     throw err;
   }

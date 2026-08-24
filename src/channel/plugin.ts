@@ -9,10 +9,10 @@
  * start the inbound event gateway.
  */
 
-import type { ChannelPlugin, ClawdbotConfig } from 'openclaw/plugin-sdk';
 import type { ChannelThreadingToolContext } from 'openclaw/plugin-sdk/channel-contract';
 import { DEFAULT_ACCOUNT_ID } from 'openclaw/plugin-sdk/account-id';
 import { PAIRING_APPROVED_MESSAGE } from 'openclaw/plugin-sdk/channel-status';
+import type { ChannelPlugin, ClawdbotConfig } from '../types/plugin-sdk-types';
 import type { LarkAccount } from '../core/types';
 import { getDefaultLarkAccountId, getLarkAccount, getLarkAccountIds } from '../core/accounts';
 import { feishuOutbound } from '../messaging/outbound/outbound';

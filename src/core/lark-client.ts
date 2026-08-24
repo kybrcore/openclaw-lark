@@ -16,7 +16,7 @@
 
 import * as Lark from '@larksuiteoapi/node-sdk';
 
-import type { ClawdbotConfig, PluginRuntime } from 'openclaw/plugin-sdk';
+import type { ClawdbotConfig, PluginRuntime } from '../types/plugin-sdk-types';
 import type { MessageDedup } from '../messaging/inbound/dedup';
 import { clearUserNameCache } from '../messaging/inbound/user-name-cache-store';
 import type { FeishuProbeResult, LarkAccount, LarkBrand } from './types';
@@ -486,17 +486,17 @@ injectLarkClient(LarkClient);
  *
  * The `config` object captured in tool-registration closures may be stale
  * after a hot-reload, so we prefer the live config from
- * `LarkClient.runtime.config.loadConfig()`.  However, `loadConfig()` may
+ * `LarkClient.runtime.config.current()`.  However, `config.current()` may
  * return `{}` when the runtime config snapshot has been cleared (e.g. in
  * isolated cron sessions), so we fall back to the closure-captured config
  * when the live result lacks Feishu credentials.
  *
  * @param fallback - Config to use when the runtime is not yet initialised
- *   or when `loadConfig()` returns an incomplete config.
+ *   or when `config.current()` returns an incomplete config.
  */
 export function getResolvedConfig(fallback: ClawdbotConfig): ClawdbotConfig {
   try {
-    const live = LarkClient.runtime.config.loadConfig() as ClawdbotConfig;
+    const live = LarkClient.runtime.config.current() as ClawdbotConfig;
     // loadConfig() may return {} (empty config) when runtimeConfigSnapshot
     // has been cleared (e.g. after writeConfigFile, secrets teardown, or
     // concurrent cron race conditions in isolated sessions).  In that case

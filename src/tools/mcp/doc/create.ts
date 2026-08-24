@@ -6,8 +6,8 @@
  * 从 Markdown 创建云文档（支持异步 task_id 查询）
  */
 
-import type { OpenClawPluginApi } from 'openclaw/plugin-sdk';
 import { type Static, Type } from '@sinclair/typebox';
+import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 import { registerMcpTool } from '../shared';
 
 // Schema 定义

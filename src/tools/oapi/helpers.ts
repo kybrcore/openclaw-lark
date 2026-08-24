@@ -7,7 +7,6 @@
  * 提供 OAPI 工具特有的功能（如时间转换），并复用通用辅助函数。
  */
 
-import type { ClawdbotConfig } from 'openclaw/plugin-sdk';
 import type { Client as LarkClient } from '@larksuiteoapi/node-sdk';
 
 // ---------------------------------------------------------------------------
@@ -54,6 +53,7 @@ export type {
 // OAPI 专用：客户端便捷创建
 // ---------------------------------------------------------------------------
 
+import type { ClawdbotConfig } from '../../types/plugin-sdk-types';
 import { Type } from '@sinclair/typebox';
 import type { SchemaOptions, TUnsafe } from '@sinclair/typebox';
 import type { ToolResult } from '../helpers';
@@ -90,7 +90,6 @@ export function createFeishuClientFromConfig(config: ClawdbotConfig): LarkClient
 // ---------------------------------------------------------------------------
 // OAPI 专用：返回值格式化（简化版）
 // ---------------------------------------------------------------------------
-
 
 /**
  * 格式化返回值为 JSON（OAPI 工具常用简化接口）
@@ -439,7 +438,6 @@ export { handleInvokeErrorWithAutoAuth } from '../auto-auth';
 // ---------------------------------------------------------------------------
 // Schema 辅助：LLM 友好的字符串枚举
 // ---------------------------------------------------------------------------
-
 
 /**
  * 创建 LLM 友好的字符串枚举 schema。

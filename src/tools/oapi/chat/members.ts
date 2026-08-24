@@ -8,9 +8,16 @@
  * 使用 sdk.im.v1.chatMembers.get 接口
  */
 
-import type { OpenClawPluginApi } from 'openclaw/plugin-sdk';
 import { Type } from '@sinclair/typebox';
-import { StringEnum, assertLarkOk, createToolContext, handleInvokeErrorWithAutoAuth, json, registerTool } from '../helpers';
+import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
+import {
+  StringEnum,
+  assertLarkOk,
+  createToolContext,
+  handleInvokeErrorWithAutoAuth,
+  json,
+  registerTool,
+} from '../helpers';
 import type { ChatMemberListData } from '../sdk-types';
 
 // ---------------------------------------------------------------------------
@@ -21,9 +28,7 @@ const ChatMembersSchema = Type.Object({
   chat_id: Type.String({
     description: '群 ID（格式如 oc_xxx）。' + '可以通过 feishu_chat_search 工具搜索获取',
   }),
-  member_id_type: Type.Optional(
-    StringEnum(['open_id', 'union_id', 'user_id']),
-  ),
+  member_id_type: Type.Optional(StringEnum(['open_id', 'union_id', 'user_id'])),
   page_size: Type.Optional(
     Type.Integer({
       description: '分页大小（默认20）',

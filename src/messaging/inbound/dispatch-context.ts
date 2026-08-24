@@ -9,8 +9,8 @@
  * event emission.
  */
 
-import type { ClawdbotConfig, RuntimeEnv } from 'openclaw/plugin-sdk';
 import { resolveThreadSessionKeys } from 'openclaw/plugin-sdk/routing';
+import type { ClawdbotConfig, RuntimeEnv } from '../../types/plugin-sdk-types';
 import type { MessageContext } from '../types';
 import type { LarkAccount } from '../../core/types';
 import { LarkClient } from '../../core/lark-client';
@@ -89,11 +89,7 @@ export function buildDispatchContext(params: {
   const feishuFrom = `feishu:${ctx.senderId}`;
   // Comment targets use the comment target string directly as the "To"
   // so the outbound routing layer can detect it and route through Drive API.
-  const feishuTo = isComment
-    ? ctx.chatId
-    : isGroup
-      ? `chat:${ctx.chatId}`
-      : `user:${ctx.senderId}`;
+  const feishuTo = isComment ? ctx.chatId : isGroup ? `chat:${ctx.chatId}` : `user:${ctx.senderId}`;
 
   const envelopeFrom = isGroup ? `${ctx.chatId}:${ctx.senderId}` : ctx.senderId;
 

@@ -9,10 +9,10 @@
  * policies, and DM allowlists interactively.
  */
 
-import type { ClawdbotConfig, WizardPrompter } from 'openclaw/plugin-sdk';
 import type { ChannelSetupDmPolicy, ChannelSetupWizardAdapter } from 'openclaw/plugin-sdk/setup';
 import { DEFAULT_ACCOUNT_ID } from 'openclaw/plugin-sdk/account-id';
 import { formatDocsLink } from 'openclaw/plugin-sdk/setup';
+import type { ClawdbotConfig, WizardPrompter } from '../types/plugin-sdk-types';
 import type { FeishuConfig } from '../core/types';
 import { getLarkCredentials } from '../core/accounts';
 import { probeFeishu } from './probe';
