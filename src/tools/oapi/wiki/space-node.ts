@@ -39,11 +39,8 @@ const FeishuWikiSpaceNodeSchema = Type.Union([
     space_id: Type.String({
       description: 'space_id',
     }),
-    parent_node_token: Type.Optional(
-      Type.String({
-        description: 'parent_node_token',
-      }),
-    ),
+    parent_node_id: Type.Optional(Type.String({ description: '父节点 ID（可选）' })),
+    parent_node_token: Type.Optional(Type.String({ description: '【parent_node_id 的别名】' })),
     page_size: Type.Optional(
       Type.Integer({
         description: 'page_size',
@@ -76,12 +73,12 @@ const FeishuWikiSpaceNodeSchema = Type.Union([
     space_id: Type.String({
       description: 'space_id',
     }),
-    obj_type: StringEnum(['sheet', 'mindnote', 'bitable', 'file', 'docx', 'slides'], { description: 'obj_type' }),
-    parent_node_token: Type.Optional(
-      Type.String({
-        description: 'parent_node_token',
-      }),
+    obj_type: StringEnum(
+      ["sheet", "mindnote", "bitable", "file", "docx", "slides"],
+      { description: "obj_type" },
     ),
+    parent_node_id: Type.Optional(Type.String({ description: "父节点 ID（可选）" })),
+    parent_node_token: Type.Optional(Type.String({ description: "【parent_node_id 的别名】" })),
     node_type: StringEnum(['origin', 'shortcut'], {
       description: 'node_type',
     }),
@@ -103,14 +100,10 @@ const FeishuWikiSpaceNodeSchema = Type.Union([
     space_id: Type.String({
       description: 'space_id',
     }),
-    node_token: Type.String({
-      description: 'node_token',
-    }),
-    target_parent_token: Type.Optional(
-      Type.String({
-        description: 'target_parent_token',
-      }),
-    ),
+    node_id: Type.Optional(Type.String({ description: '节点 ID（与 node_token 二选一）' })),
+    node_token: Type.Optional(Type.String({ description: '【node_id 的别名】节点 token' })),
+    target_parent_id: Type.Optional(Type.String({ description: '目标父节点 ID（可选）' })),
+    target_parent_token: Type.Optional(Type.String({ description: '【target_parent_id 的别名】' })),
   }),
 
   // COPY NODE
@@ -119,19 +112,15 @@ const FeishuWikiSpaceNodeSchema = Type.Union([
     space_id: Type.String({
       description: 'space_id',
     }),
-    node_token: Type.String({
-      description: 'node_token',
-    }),
+    node_id: Type.Optional(Type.String({ description: '节点 ID（与 node_token 二选一）' })),
+    node_token: Type.Optional(Type.String({ description: '【node_id 的别名】节点 token' })),
     target_space_id: Type.Optional(
       Type.String({
         description: 'target_space_id',
       }),
     ),
-    target_parent_token: Type.Optional(
-      Type.String({
-        description: 'target_parent_token',
-      }),
-    ),
+    target_parent_id: Type.Optional(Type.String({ description: '目标父节点 ID（可选）' })),
+    target_parent_token: Type.Optional(Type.String({ description: '【target_parent_id 的别名】' })),
     title: Type.Optional(
       Type.String({
         description: 'title',
@@ -148,6 +137,8 @@ type FeishuWikiSpaceNodeParams =
   | {
       action: 'list';
       space_id: string;
+      parent_node_id?: string;
+      parent_node_id?: string;
       parent_node_token?: string;
       page_size?: number;
       page_token?: string;
@@ -161,6 +152,8 @@ type FeishuWikiSpaceNodeParams =
       action: 'create';
       space_id: string;
       obj_type: string;
+      parent_node_id?: string;
+      parent_node_id?: string;
       parent_node_token?: string;
       node_type: 'origin' | 'shortcut';
       origin_node_token?: string;
@@ -169,14 +162,20 @@ type FeishuWikiSpaceNodeParams =
   | {
       action: 'move';
       space_id: string;
-      node_token: string;
+      node_id?: string;
+      node_token?: string;
+      target_parent_id?: string;
+      target_parent_id?: string;
       target_parent_token?: string;
     }
   | {
       action: 'copy';
       space_id: string;
-      node_token: string;
+      node_id?: string;
+      node_token?: string;
       target_space_id?: string;
+      target_parent_id?: string;
+      target_parent_id?: string;
       target_parent_token?: string;
       title?: string;
     };
@@ -212,7 +211,7 @@ export function registerFeishuWikiSpaceNodeTool(api: OpenClawPluginApi): boolean
             // -----------------------------------------------------------------
             case 'list': {
               log.info(
-                `list: space_id=${p.space_id}, parent=${p.parent_node_token ?? '(root)'}, page_size=${p.page_size ?? 50}`,
+                `list: space_id=${p.space_id}, parent=${(p.parent_node_id ?? (p.parent_node_id ?? p.parent_node_token)) ?? '(root)'}, page_size=${p.page_size ?? 50}`,
               );
 
               const res = await client.invoke(
@@ -224,7 +223,7 @@ export function registerFeishuWikiSpaceNodeTool(api: OpenClawPluginApi): boolean
                       params: {
                         page_size: p.page_size as any,
                         page_token: p.page_token,
-                        parent_node_token: p.parent_node_token,
+                        parent_node_token: (p.parent_node_id ?? (p.parent_node_id ?? p.parent_node_token)),
                       },
                     },
                     opts,
@@ -277,7 +276,7 @@ export function registerFeishuWikiSpaceNodeTool(api: OpenClawPluginApi): boolean
             // -----------------------------------------------------------------
             case 'create': {
               log.info(
-                `create: space_id=${p.space_id}, obj_type=${p.obj_type}, parent=${p.parent_node_token ?? '(root)'}, title=${p.title ?? '(empty)'}, node_type=${p.node_type}, original_node_token=${p.origin_node_token ?? '(empty)'}`,
+                `create: space_id=${p.space_id}, obj_type=${p.obj_type}, parent=${(p.parent_node_id ?? (p.parent_node_id ?? p.parent_node_token)) ?? '(root)'}, title=${p.title ?? '(empty)'}, node_type=${p.node_type}, original_node_token=${(p.origin_node_id ?? (p.origin_node_id ?? p.origin_node_token)) ?? '(empty)'}`,
               );
 
               const res = await client.invoke(
@@ -288,9 +287,9 @@ export function registerFeishuWikiSpaceNodeTool(api: OpenClawPluginApi): boolean
                       path: { space_id: p.space_id },
                       data: {
                         obj_type: p.obj_type as any,
-                        parent_node_token: p.parent_node_token,
+                        parent_node_token: (p.parent_node_id ?? (p.parent_node_id ?? p.parent_node_token)),
                         node_type: p.node_type as any,
-                        origin_node_token: p.origin_node_token,
+                        origin_node_token: (p.origin_node_id ?? (p.origin_node_id ?? p.origin_node_token)),
                         title: p.title,
                       },
                     },
@@ -312,7 +311,7 @@ export function registerFeishuWikiSpaceNodeTool(api: OpenClawPluginApi): boolean
             // -----------------------------------------------------------------
             case 'move': {
               log.info(
-                `move: space_id=${p.space_id}, node_token=${p.node_token}, target_parent=${p.target_parent_token ?? '(root)'}`,
+                `move: space_id=${p.space_id}, node_token=${(p.node_id ?? (p.node_id ?? p.node_token))}, target_parent=${(p.target_parent_id ?? (p.target_parent_id ?? p.target_parent_token)) ?? '(root)'}`,
               );
 
               const res = await client.invoke(
@@ -322,10 +321,10 @@ export function registerFeishuWikiSpaceNodeTool(api: OpenClawPluginApi): boolean
                     {
                       path: {
                         space_id: p.space_id,
-                        node_token: p.node_token,
+                        node_token: (p.node_id ?? (p.node_id ?? p.node_token)),
                       },
                       data: {
-                        target_parent_token: p.target_parent_token,
+                        target_parent_token: (p.target_parent_id ?? (p.target_parent_id ?? p.target_parent_token)),
                       },
                     },
                     opts,
@@ -334,7 +333,7 @@ export function registerFeishuWikiSpaceNodeTool(api: OpenClawPluginApi): boolean
               );
               assertLarkOk(res);
 
-              log.info(`move: moved node ${p.node_token}`);
+              log.info(`move: moved node ${(p.node_id ?? (p.node_id ?? p.node_token))}`);
 
               return json({
                 node: res.data?.node,
@@ -346,7 +345,7 @@ export function registerFeishuWikiSpaceNodeTool(api: OpenClawPluginApi): boolean
             // -----------------------------------------------------------------
             case 'copy': {
               log.info(
-                `copy: space_id=${p.space_id}, node_token=${p.node_token}, target_space=${p.target_space_id ?? '(same)'}, target_parent=${p.target_parent_token ?? '(root)'}`,
+                `copy: space_id=${p.space_id}, node_token=${(p.node_id ?? (p.node_id ?? p.node_token))}, target_space=${p.target_space_id ?? '(same)'}, target_parent=${(p.target_parent_id ?? (p.target_parent_id ?? p.target_parent_token)) ?? '(root)'}`,
               );
 
               const res = await client.invoke(
@@ -356,11 +355,11 @@ export function registerFeishuWikiSpaceNodeTool(api: OpenClawPluginApi): boolean
                     {
                       path: {
                         space_id: p.space_id,
-                        node_token: p.node_token,
+                        node_token: (p.node_id ?? (p.node_id ?? p.node_token)),
                       },
                       data: {
                         target_space_id: p.target_space_id,
-                        target_parent_token: p.target_parent_token,
+                        target_parent_token: (p.target_parent_id ?? (p.target_parent_id ?? p.target_parent_token)),
                         title: p.title,
                       },
                     },
