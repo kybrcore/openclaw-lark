@@ -14,10 +14,6 @@ export default defineConfig({
   deps: {
     neverBundle: [
       /^openclaw(\/.*)?$/,
-      /^@larksuiteoapi\//,
-      /^@sinclair\//,
-      'image-size',
-      'zod',
       /^node:/,
     ],
   },

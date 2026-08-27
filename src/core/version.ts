@@ -7,8 +7,8 @@
  * 从 package.json 读取版本号并生成 User-Agent 字符串。
  */
 
-import { dirname, join } from 'node:path';
 import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 /** 缓存的版本号 */
 let cachedVersion: string | undefined;
@@ -23,10 +23,9 @@ export function getPluginVersion(): string {
 
   try {
     // 当前文件: src/core/version.ts → 向上两级到达项目根目录
-    // Use the CJS-native __filename: the published package ships CJS output, and
-    // any `import.meta` token — even in dead branches — flips Node's module-syntax
-    // detection to ESM, yielding an empty module namespace (see #605 block 2).
-    const packageJsonPath = join(dirname(__filename), '..', '..', 'package.json');
+    // The published build is ESM-only (tsdown format: esm), so import.meta.url
+    // is safe here; __filename would crash at import time in ESM.
+    const packageJsonPath = fileURLToPath(new URL('../../package.json', import.meta.url));
 
     const raw = readFileSync(packageJsonPath, 'utf8');
     const pkg = JSON.parse(raw) as { version?: string };

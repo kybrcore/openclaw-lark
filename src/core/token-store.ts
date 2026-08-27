@@ -29,10 +29,9 @@ import { larkLogger } from './lark-logger';
 const log = larkLogger('core/token-store');
 
 // Dynamic require to avoid security scanner false positive (child-process).
-// `typeof __filename` guards do NOT help: Node's module-syntax detection is
-// lexical, so any `import.meta` token — even in a dead branch — classifies the
-// whole CJS file as ESM and breaks it. Keep this file free of import.meta.
-const _require = createRequire(__filename);
+// The published build is ESM-only (tsdown format: esm), so import.meta.url is
+// safe here; __filename would crash at import time in ESM (incident 2026-08-27).
+const _require = createRequire(import.meta.url);
 const _cpMod = ['child', 'process'].join('_');
 const _cp = _require(`node:${_cpMod}`) as typeof import('node:child_process');
 const execFile = promisify(_cp.execFile);
