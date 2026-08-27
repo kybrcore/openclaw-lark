@@ -8,8 +8,8 @@
  * 使用搜索接口（/open-apis/search/v1/user）
  */
 
-import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 import { Type } from '@sinclair/typebox';
+import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 import { assertLarkOk, createToolContext, handleInvokeErrorWithAutoAuth, json , registerTool } from '../helpers';
 import type { SearchUserData } from '../sdk-types';
 

@@ -12,8 +12,8 @@
  */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 import { Type } from '@sinclair/typebox';
+import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 
 import { createToolContext, handleInvokeErrorWithAutoAuth, json, registerTool } from '../helpers';
 import { rawLarkRequest } from '../../../core/raw-request';

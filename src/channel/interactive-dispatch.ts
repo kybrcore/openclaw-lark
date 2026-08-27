@@ -12,9 +12,9 @@
  * We intentionally do NOT maintain any channel-local global registry here.
  */
 
+import { dispatchPluginInteractiveHandler } from 'openclaw/plugin-sdk/plugin-runtime';
 import type { ClawdbotConfig } from '../types/plugin-sdk-types';
 // NOTE: This is the SDK-standard interactive pipeline.
-import { dispatchPluginInteractiveHandler } from 'openclaw/plugin-sdk/plugin-runtime';
 import { resolveCardCallbackOperatorId } from '../core/card-action-operator';
 import { larkLogger } from '../core/lark-logger';
 import { sendCardFeishu, sendMessageFeishu, updateCardFeishu } from '../messaging/outbound/send';

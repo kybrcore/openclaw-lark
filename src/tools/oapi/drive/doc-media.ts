@@ -22,8 +22,8 @@ import { createReadStream } from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
 import { Type } from '@sinclair/typebox';
-import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 import { imageSize } from 'image-size';
+import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 import { validateLocalMediaRoots } from '../../../messaging/outbound/media-url-utils';
 import { StringEnum, assertLarkOk, createToolContext, handleInvokeErrorWithAutoAuth, json, registerTool } from '../helpers';
 

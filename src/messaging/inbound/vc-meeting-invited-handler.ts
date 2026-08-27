@@ -10,8 +10,8 @@
  */
 
 import * as crypto from 'node:crypto'
-import type { ClawdbotConfig, RuntimeEnv } from '../../types/plugin-sdk-types'
 import type { HistoryEntry } from 'openclaw/plugin-sdk/reply-history'
+import type { ClawdbotConfig, RuntimeEnv } from '../../types/plugin-sdk-types'
 import type { FeishuVcMeetingInvitedEvent, MessageContext, VcMeetingInvitedSyntheticEvent } from '../types'
 import { SYNTHETIC_VC_CHAT_ID, SYNTHETIC_VC_CHAT_TYPE } from '../../core/synthetic-target'
 import { getLarkAccount } from '../../core/accounts'

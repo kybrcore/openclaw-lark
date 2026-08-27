@@ -7,8 +7,13 @@
  * 提供 OAPI 工具特有的功能（如时间转换），并复用通用辅助函数。
  */
 
-import type { ClawdbotConfig } from '../../types/plugin-sdk-types';
 import type { Client as LarkClient } from '@larksuiteoapi/node-sdk';
+import { Type } from '@sinclair/typebox';
+import type { SchemaOptions, TUnsafe } from '@sinclair/typebox';
+
+import type { ClawdbotConfig } from '../../types/plugin-sdk-types';
+import type { ToolResult } from '../helpers';
+import { createClientGetter, formatToolResult } from '../helpers';
 
 // ---------------------------------------------------------------------------
 // 通用功能（从 tools/helpers.ts 导入）
@@ -25,6 +30,7 @@ export {
   validateEnum,
   checkToolRegistration,
   registerTool,
+  resolveRequiredIdAlias,
 } from '../helpers';
 
 export type { ToolResult, ClientGetter, ToolContext } from '../helpers';
@@ -53,11 +59,6 @@ export type {
 // ---------------------------------------------------------------------------
 // OAPI 专用：客户端便捷创建
 // ---------------------------------------------------------------------------
-
-import { Type } from '@sinclair/typebox';
-import type { SchemaOptions, TUnsafe } from '@sinclair/typebox';
-import type { ToolResult } from '../helpers';
-import { createClientGetter, formatToolResult } from '../helpers';
 
 /**
  * 从配置直接创建飞书客户端（OAPI 工具常用模式）

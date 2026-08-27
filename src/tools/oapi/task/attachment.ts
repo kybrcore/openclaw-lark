@@ -7,14 +7,13 @@
  * Actions:
  * - upload: Upload task attachment (tenant identity)
  */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
+
 import { Type } from '@sinclair/typebox';
+import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 
-import { StringEnum, createToolContext, handleInvokeErrorWithAutoAuth, json, registerTool } from '../helpers';
 import { rawLarkRequest } from '../../../core/raw-request';
-
+import { StringEnum, createToolContext, handleInvokeErrorWithAutoAuth, json, registerTool } from '../helpers';
 
 // ---------------------------------------------------------------------------
 // Schema

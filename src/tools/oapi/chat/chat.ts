@@ -13,8 +13,8 @@
  *   - get:    GET /open-apis/im/v1/chats/:chat_id
  */
 
-import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 import { Type } from '@sinclair/typebox';
+import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 import { StringEnum, assertLarkOk, createToolContext, handleInvokeErrorWithAutoAuth, json, registerTool } from '../helpers';
 import type { PaginatedData } from '../sdk-types';
 

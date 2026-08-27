@@ -6,8 +6,8 @@
  * 查看云文档内容（返回标题与 Markdown，支持分页）
  */
 
-import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 import { type Static, Type } from '@sinclair/typebox';
+import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 import { registerMcpTool } from '../shared';
 
 // Schema 定义

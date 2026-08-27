@@ -15,9 +15,16 @@
  *   - copy:   POST /open-apis/bitable/v1/apps/:app_token/copy
  */
 
-import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 import { Type } from '@sinclair/typebox';
-import { assertLarkOk, createToolContext, handleInvokeErrorWithAutoAuth, json , registerTool } from '../helpers';
+import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
+import {
+  assertLarkOk,
+  createToolContext,
+  handleInvokeErrorWithAutoAuth,
+  json,
+  registerTool,
+  resolveRequiredIdAlias,
+} from '../helpers';
 import type { BitableAppListData } from '../sdk-types';
 
 // ---------------------------------------------------------------------------
@@ -35,7 +42,8 @@ const FeishuBitableAppSchema = Type.Union([
   // GET (P0)
   Type.Object({
     action: Type.Literal('get'),
-    app_token: Type.String({ description: '多维表格的唯一标识 token' }),
+    app_id: Type.Optional(Type.String({ description: '多维表格 App ID（与 app_token 二选一）' })),
+    app_token: Type.Optional(Type.String({ description: '【app_id 的别名】多维表格 token' })),
   }),
 
   // LIST (P0) - 通过 Drive API 获取
@@ -58,7 +66,8 @@ const FeishuBitableAppSchema = Type.Union([
   // COPY (P1)
   Type.Object({
     action: Type.Literal('copy'),
-    app_token: Type.String({ description: '源多维表格 token' }),
+    app_id: Type.Optional(Type.String({ description: '源多维表格 App ID（与 app_token 二选一）' })),
+    app_token: Type.Optional(Type.String({ description: '【app_id 的别名】源多维表格 token' })),
     name: Type.String({ description: '新的名称' }),
     folder_token: Type.Optional(Type.String({ description: '目标文件夹 token' })),
   }),
@@ -161,7 +170,7 @@ export function registerFeishuBitableAppTool(api: OpenClawPluginApi): void {
             // GET
             // -----------------------------------------------------------------
             case 'get': {
-              log.info(`get: app_token=${(p.app_id ?? (p.app_id ?? p.app_token))}`);
+              log.info(`get: app_token=${resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token')}`);
 
               const res = await client.invoke(
                 'feishu_bitable_app.get',
@@ -169,7 +178,7 @@ export function registerFeishuBitableAppTool(api: OpenClawPluginApi): void {
                   sdk.bitable.app.get(
                     {
                       path: {
-                        app_token: (p.app_id ?? (p.app_id ?? p.app_token)),
+                        app_token: resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token'),
                       },
                     },
                     opts,
@@ -178,7 +187,7 @@ export function registerFeishuBitableAppTool(api: OpenClawPluginApi): void {
               );
               assertLarkOk(res);
 
-              log.info(`get: returned app ${(p.app_id ?? (p.app_id ?? p.app_token))}`);
+              log.info(`get: returned app ${resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token')}`);
 
               return json({
                 app: res.data?.app,
@@ -229,7 +238,7 @@ export function registerFeishuBitableAppTool(api: OpenClawPluginApi): void {
             // PATCH
             // -----------------------------------------------------------------
             case 'patch': {
-              log.info(`patch: app_token=${(p.app_id ?? (p.app_id ?? p.app_token))}, name=${p.name}, is_advanced=${p.is_advanced}`);
+              log.info(`patch: app_token=${resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token')}, name=${p.name}, is_advanced=${p.is_advanced}`);
 
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const updateData: any = {};
@@ -242,7 +251,7 @@ export function registerFeishuBitableAppTool(api: OpenClawPluginApi): void {
                   sdk.bitable.app.update(
                     {
                       path: {
-                        app_token: (p.app_id ?? (p.app_id ?? p.app_token)),
+                        app_token: resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token'),
                       },
                       data: updateData,
                     },
@@ -252,7 +261,7 @@ export function registerFeishuBitableAppTool(api: OpenClawPluginApi): void {
               );
               assertLarkOk(res);
 
-              log.info(`patch: updated app ${(p.app_id ?? (p.app_id ?? p.app_token))}`);
+              log.info(`patch: updated app ${resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token')}`);
 
               return json({
                 app: res.data?.app,
@@ -263,7 +272,7 @@ export function registerFeishuBitableAppTool(api: OpenClawPluginApi): void {
             // COPY (P1)
             // -----------------------------------------------------------------
             case 'copy': {
-              log.info(`copy: app_token=${(p.app_id ?? (p.app_id ?? p.app_token))}, name=${p.name}, folder_token=${p.folder_token ?? 'my_space'}`);
+              log.info(`copy: app_token=${resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token')}, name=${p.name}, folder_token=${p.folder_token ?? 'my_space'}`);
 
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const data: any = { name: p.name };
@@ -277,7 +286,7 @@ export function registerFeishuBitableAppTool(api: OpenClawPluginApi): void {
                   sdk.bitable.app.copy(
                     {
                       path: {
-                        app_token: (p.app_id ?? (p.app_id ?? p.app_token)),
+                        app_token: resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token'),
                       },
                       data,
                     },

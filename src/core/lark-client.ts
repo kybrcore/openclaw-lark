@@ -486,24 +486,24 @@ injectLarkClient(LarkClient);
  *
  * The `config` object captured in tool-registration closures may be stale
  * after a hot-reload, so we prefer the live config from
- * `LarkClient.runtime.config.loadConfig()`.  However, `loadConfig()` may
+ * `LarkClient.runtime.config.current()`. However, the current snapshot may
  * return `{}` when the runtime config snapshot has been cleared (e.g. in
  * isolated cron sessions), so we fall back to the closure-captured config
  * when the live result lacks Feishu credentials.
  *
  * @param fallback - Config to use when the runtime is not yet initialised
- *   or when `loadConfig()` returns an incomplete config.
+ *   or when the current snapshot is incomplete.
  */
 export function getResolvedConfig(fallback: ClawdbotConfig): ClawdbotConfig {
   try {
-    const live = LarkClient.runtime.config.loadConfig() as ClawdbotConfig;
-    // loadConfig() may return {} (empty config) when runtimeConfigSnapshot
+    const live = LarkClient.runtime.config.current() as ClawdbotConfig;
+    // The current snapshot may be {} when runtimeConfigSnapshot
     // has been cleared (e.g. after writeConfigFile, secrets teardown, or
     // concurrent cron race conditions in isolated sessions).  In that case
     // the closure-captured fallback still holds a valid resolved config.
     if (live?.channels?.feishu) return live;
     if (fallback?.channels?.feishu) {
-      log.debug(`loadConfig() returned config without channels.feishu, using fallback`);
+      log.debug(`runtime config snapshot lacks channels.feishu, using fallback`);
       return fallback;
     }
     return live;

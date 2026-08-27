@@ -7,8 +7,8 @@
  * 提供所有工具通用的模式，减少重复代码。
  */
 
-import type { ClawdbotConfig, OpenClawPluginApi } from '../types/plugin-sdk-types';
 import type { Client as LarkSdkClient } from '@larksuiteoapi/node-sdk';
+import type { ClawdbotConfig, OpenClawPluginApi } from '../types/plugin-sdk-types';
 import { getEnabledLarkAccounts, getLarkAccount } from '../core/accounts';
 import { LarkClient, getResolvedConfig } from '../core/lark-client';
 import type { LarkAccount } from '../core/types';
@@ -328,12 +328,16 @@ export function registerTool(
  * ending in `_token` or named `token` with `***` or ellipses `…`) from corrupting resource IDs
  * in transcripts, chat context, or SQLite persistence.
  */
-export function sanitizeLarkResultPayload<T>(data: T): T {
+// The sanitizer intentionally changes object keys, so returning the input type
+// would be unsound. Tool payloads are JSON-shaped and are validated at the
+// surrounding tool boundary.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function sanitizeLarkResultPayload(data: unknown): any {
   if (data === null || data === undefined) {
     return data;
   }
   if (Array.isArray(data)) {
-    return data.map((item) => sanitizeLarkResultPayload(item)) as unknown as T;
+    return data.map((item) => sanitizeLarkResultPayload(item));
   }
   if (typeof data !== 'object') {
     return data;
@@ -392,7 +396,21 @@ export function sanitizeLarkResultPayload<T>(data: T): T {
     }
   }
 
-  return result as T;
+  return result;
+}
+
+/** Resolve a preferred ID and its legacy token alias, failing before an SDK call. */
+export function resolveRequiredIdAlias(
+  preferred: string | undefined,
+  legacy: string | undefined,
+  preferredName: string,
+  legacyName: string,
+): string {
+  const value = preferred ?? legacy;
+  if (!value) {
+    throw new Error(`Either ${preferredName} or ${legacyName} is required`);
+  }
+  return value;
 }
 
 export function formatToolResult(

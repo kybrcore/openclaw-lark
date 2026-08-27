@@ -12,8 +12,8 @@
  *   - primary: POST /open-apis/calendar/v4/calendars/primary
  */
 
-import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 import { Type } from '@sinclair/typebox';
+import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 import { assertLarkOk, createToolContext, handleInvokeErrorWithAutoAuth, json , registerTool } from '../helpers';
 import type { CalendarGetData, CalendarListData, CalendarPrimaryData } from '../sdk-types';
 

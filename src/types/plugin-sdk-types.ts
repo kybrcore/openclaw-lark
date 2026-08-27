@@ -10,9 +10,12 @@ export type {
   OpenClawPluginApi,
   PluginRuntime,
   ChannelPlugin,
-  ChannelMessageActionAdapter,
 } from 'openclaw/plugin-sdk/channel-plugin-common';
 export { emptyPluginConfigSchema } from 'openclaw/plugin-sdk/channel-plugin-common';
+export type {
+  ChannelMessageActionAdapter,
+  ChannelMessageActionName,
+} from 'openclaw/plugin-sdk/channel-contract';
 export type { OpenClawConfig } from 'openclaw/plugin-sdk/plugin-entry';
 /** Legacy project-name alias, removed upstream in the 2026.8 SDK sweep. */
 export type ClawdbotConfig = import('openclaw/plugin-sdk/plugin-entry').OpenClawConfig;

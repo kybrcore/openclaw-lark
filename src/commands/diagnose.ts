@@ -14,6 +14,8 @@ import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import * as os from 'node:os';
 
+import type * as Lark from '@larksuiteoapi/node-sdk';
+
 import type { OpenClawConfig } from '../types/plugin-sdk-types';
 
 interface DiagLogger {
@@ -21,8 +23,6 @@ interface DiagLogger {
   warn: (message: string) => void;
   error: (message: string) => void;
 }
-import type * as Lark from '@larksuiteoapi/node-sdk';
-
 import { probeFeishu } from '../channel/probe';
 import { getEnabledLarkAccounts, getLarkAccount, getLarkAccountIds } from '../core/accounts';
 import { LarkClient } from '../core/lark-client';

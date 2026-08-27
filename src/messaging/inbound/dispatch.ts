@@ -14,9 +14,9 @@
  * - dispatch-commands.ts — system command & permission notification
  */
 
-import type { ClawdbotConfig, RuntimeEnv  } from '../../types/plugin-sdk-types';
 import type { HistoryEntry } from 'openclaw/plugin-sdk/reply-history';
 import { clearHistoryEntriesIfEnabled } from 'openclaw/plugin-sdk/reply-history';
+import type { ClawdbotConfig, RuntimeEnv  } from '../../types/plugin-sdk-types';
 import type { MessageContext } from '../types';
 import type { FeishuGroupConfig, LarkAccount  } from '../../core/types';
 import { larkLogger } from '../../core/lark-logger';

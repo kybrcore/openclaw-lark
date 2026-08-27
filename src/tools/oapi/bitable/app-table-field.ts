@@ -13,10 +13,17 @@
  *   - delete: DELETE /open-apis/bitable/v1/apps/:app_token/tables/:table_id/fields/:field_id
  */
 
-import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 import { Type } from '@sinclair/typebox';
+import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 
-import { assertLarkOk, createToolContext, handleInvokeErrorWithAutoAuth, json , registerTool } from '../helpers';
+import {
+  assertLarkOk,
+  createToolContext,
+  handleInvokeErrorWithAutoAuth,
+  json,
+  registerTool,
+  resolveRequiredIdAlias,
+} from '../helpers';
 import type { FieldData, PaginatedData } from '../sdk-types';
 
 // ---------------------------------------------------------------------------
@@ -156,7 +163,7 @@ export function registerFeishuBitableAppTableFieldTool(api: OpenClawPluginApi): 
             // -----------------------------------------------------------------
             case 'create': {
               log.info(
-                `create: app_token=${(p.app_id ?? (p.app_id ?? p.app_token))}, table_id=${p.table_id}, field_name=${p.field_name}, type=${p.type}`,
+                `create: app_token=${resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token')}, table_id=${p.table_id}, field_name=${p.field_name}, type=${p.type}`,
               );
 
               // 特殊处理：超链接字段（type=15）和复选框字段（type=7）不能传 property，即使是空对象也会报错
@@ -177,7 +184,7 @@ export function registerFeishuBitableAppTableFieldTool(api: OpenClawPluginApi): 
                   sdk.bitable.appTableField.create(
                     {
                       path: {
-                        app_token: (p.app_id ?? (p.app_id ?? p.app_token)),
+                        app_token: resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token'),
                         table_id: p.table_id,
                       },
                       data: {
@@ -205,7 +212,7 @@ export function registerFeishuBitableAppTableFieldTool(api: OpenClawPluginApi): 
             // LIST
             // -----------------------------------------------------------------
             case 'list': {
-              log.info(`list: app_token=${(p.app_id ?? (p.app_id ?? p.app_token))}, table_id=${p.table_id}, view_id=${p.view_id ?? 'none'}`);
+              log.info(`list: app_token=${resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token')}, table_id=${p.table_id}, view_id=${p.view_id ?? 'none'}`);
 
               const res = await client.invoke(
                 'feishu_bitable_app_table_field.list',
@@ -213,7 +220,7 @@ export function registerFeishuBitableAppTableFieldTool(api: OpenClawPluginApi): 
                   sdk.bitable.appTableField.list(
                     {
                       path: {
-                        app_token: (p.app_id ?? (p.app_id ?? p.app_token)),
+                        app_token: resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token'),
                         table_id: p.table_id,
                       },
                       params: {
@@ -243,7 +250,7 @@ export function registerFeishuBitableAppTableFieldTool(api: OpenClawPluginApi): 
             // UPDATE
             // -----------------------------------------------------------------
             case 'update': {
-              log.info(`update: app_token=${(p.app_id ?? (p.app_id ?? p.app_token))}, table_id=${p.table_id}, field_id=${p.field_id}`);
+              log.info(`update: app_token=${resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token')}, table_id=${p.table_id}, field_id=${p.field_id}`);
 
               // 如果缺少 type 或 field_name，自动查询当前字段信息
               let finalFieldName = p.field_name;
@@ -259,7 +266,7 @@ export function registerFeishuBitableAppTableFieldTool(api: OpenClawPluginApi): 
                     sdk.bitable.appTableField.list(
                       {
                         path: {
-                          app_token: (p.app_id ?? (p.app_id ?? p.app_token)),
+                          app_token: resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token'),
                           table_id: p.table_id,
                         },
                         params: {
@@ -309,7 +316,7 @@ export function registerFeishuBitableAppTableFieldTool(api: OpenClawPluginApi): 
                   sdk.bitable.appTableField.update(
                     {
                       path: {
-                        app_token: (p.app_id ?? (p.app_id ?? p.app_token)),
+                        app_token: resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token'),
                         table_id: p.table_id,
                         field_id: p.field_id,
                       },
@@ -334,7 +341,7 @@ export function registerFeishuBitableAppTableFieldTool(api: OpenClawPluginApi): 
             // DELETE
             // -----------------------------------------------------------------
             case 'delete': {
-              log.info(`delete: app_token=${(p.app_id ?? (p.app_id ?? p.app_token))}, table_id=${p.table_id}, field_id=${p.field_id}`);
+              log.info(`delete: app_token=${resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token')}, table_id=${p.table_id}, field_id=${p.field_id}`);
 
               const res = await client.invoke(
                 'feishu_bitable_app_table_field.delete',
@@ -342,7 +349,7 @@ export function registerFeishuBitableAppTableFieldTool(api: OpenClawPluginApi): 
                   sdk.bitable.appTableField.delete(
                     {
                       path: {
-                        app_token: (p.app_id ?? (p.app_id ?? p.app_token)),
+                        app_token: resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token'),
                         table_id: p.table_id,
                         field_id: p.field_id,
                       },

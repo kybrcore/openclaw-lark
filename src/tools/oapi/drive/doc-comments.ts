@@ -13,8 +13,8 @@
  */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 import { Type } from '@sinclair/typebox';
+import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 import {
   StringEnum,
   assertLarkOk,
@@ -22,6 +22,7 @@ import {
   handleInvokeErrorWithAutoAuth,
   json,
   registerTool,
+  resolveRequiredIdAlias,
 } from '../helpers';
 import type { CommentReplyListData } from '../sdk-types';
 
@@ -242,7 +243,7 @@ export function registerDocCommentsTool(api: OpenClawPluginApi): boolean {
           const userIdType = p.user_id_type || 'open_id';
 
           // 如果是 wiki token，先转换为实际的 obj_token 和 obj_type
-          let actualFileToken = p.file_id ?? p.file_token;
+          let actualFileToken = resolveRequiredIdAlias(p.file_id, p.file_token, 'file_id', 'file_token');
           let actualFileType = p.file_type;
 
           if (p.file_type === 'wiki') {

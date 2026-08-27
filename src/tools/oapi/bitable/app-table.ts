@@ -14,10 +14,17 @@
  *   - batch_create: POST /open-apis/bitable/v1/apps/:app_token/tables/batch_create
  */
 
-import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 import { Type } from '@sinclair/typebox';
+import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 
-import { assertLarkOk, createToolContext, handleInvokeErrorWithAutoAuth, json , registerTool } from '../helpers';
+import {
+  assertLarkOk,
+  createToolContext,
+  handleInvokeErrorWithAutoAuth,
+  json,
+  registerTool,
+  resolveRequiredIdAlias,
+} from '../helpers';
 import type { PaginatedData } from '../sdk-types';
 
 // ---------------------------------------------------------------------------
@@ -156,7 +163,7 @@ export function registerFeishuBitableAppTableTool(api: OpenClawPluginApi): void 
             // -----------------------------------------------------------------
             case 'create': {
               log.info(
-                `create: app_token=${(p.app_id ?? (p.app_id ?? p.app_token))}, table_name=${p.table.name}, fields_count=${p.table.fields?.length ?? 0}`,
+                `create: app_token=${resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token')}, table_name=${p.table.name}, fields_count=${p.table.fields?.length ?? 0}`,
               );
 
               // 特殊处理：复选框（type=7）和超链接（type=15）字段不能传 property
@@ -184,7 +191,7 @@ export function registerFeishuBitableAppTableTool(api: OpenClawPluginApi): void 
                   sdk.bitable.appTable.create(
                     {
                       path: {
-                        app_token: (p.app_id ?? (p.app_id ?? p.app_token)),
+                        app_token: resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token'),
                       },
                       data: {
                         table: tableData,
@@ -209,7 +216,7 @@ export function registerFeishuBitableAppTableTool(api: OpenClawPluginApi): void 
             // LIST
             // -----------------------------------------------------------------
             case 'list': {
-              log.info(`list: app_token=${(p.app_id ?? (p.app_id ?? p.app_token))}, page_size=${p.page_size ?? 50}`);
+              log.info(`list: app_token=${resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token')}, page_size=${p.page_size ?? 50}`);
 
               const res = await client.invoke(
                 'feishu_bitable_app_table.list',
@@ -217,7 +224,7 @@ export function registerFeishuBitableAppTableTool(api: OpenClawPluginApi): void 
                   sdk.bitable.appTable.list(
                     {
                       path: {
-                        app_token: (p.app_id ?? (p.app_id ?? p.app_token)),
+                        app_token: resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token'),
                       },
                       params: {
                         page_size: p.page_size,
@@ -245,7 +252,7 @@ export function registerFeishuBitableAppTableTool(api: OpenClawPluginApi): void 
             // PATCH
             // -----------------------------------------------------------------
             case 'patch': {
-              log.info(`patch: app_token=${(p.app_id ?? (p.app_id ?? p.app_token))}, table_id=${p.table_id}, name=${p.name}`);
+              log.info(`patch: app_token=${resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token')}, table_id=${p.table_id}, name=${p.name}`);
 
               const res = await client.invoke(
                 'feishu_bitable_app_table.patch',
@@ -253,7 +260,7 @@ export function registerFeishuBitableAppTableTool(api: OpenClawPluginApi): void 
                   sdk.bitable.appTable.patch(
                     {
                       path: {
-                        app_token: (p.app_id ?? (p.app_id ?? p.app_token)),
+                        app_token: resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token'),
                         table_id: p.table_id,
                       },
                       data: {
@@ -283,7 +290,7 @@ export function registerFeishuBitableAppTableTool(api: OpenClawPluginApi): void 
                 });
               }
 
-              log.info(`batch_create: app_token=${(p.app_id ?? (p.app_id ?? p.app_token))}, tables_count=${p.tables.length}`);
+              log.info(`batch_create: app_token=${resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token')}, tables_count=${p.tables.length}`);
 
               const res = await client.invoke(
                 'feishu_bitable_app_table.batch_create',
@@ -291,7 +298,7 @@ export function registerFeishuBitableAppTableTool(api: OpenClawPluginApi): void 
                   sdk.bitable.appTable.batchCreate(
                     {
                       path: {
-                        app_token: (p.app_id ?? (p.app_id ?? p.app_token)),
+                        app_token: resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token'),
                       },
                       data: {
                         tables: p.tables,
@@ -303,7 +310,7 @@ export function registerFeishuBitableAppTableTool(api: OpenClawPluginApi): void 
               );
               assertLarkOk(res);
 
-              log.info(`batch_create: created ${p.tables.length} tables in app ${(p.app_id ?? (p.app_id ?? p.app_token))}`);
+              log.info(`batch_create: created ${p.tables.length} tables in app ${resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token')}`);
 
               return json({
                 table_ids: res.data?.table_ids,

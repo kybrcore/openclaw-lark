@@ -21,8 +21,8 @@
  */
 
 import { randomUUID } from 'node:crypto';
-import type { ClawdbotConfig, OpenClawPluginApi } from '../types/plugin-sdk-types';
 import { Type } from '@sinclair/typebox';
+import type { ClawdbotConfig, OpenClawPluginApi } from '../types/plugin-sdk-types';
 import { getTicket, withTicket } from '../core/lark-ticket';
 import { resolveCardCallbackOperatorId } from '../core/card-action-operator';
 import { larkLogger } from '../core/lark-logger';

@@ -8,8 +8,8 @@
  * 按照 doctor_template.md 的格式规范实现。
  */
 
-import type { OpenClawConfig } from '../types/plugin-sdk-types';
 import type * as Lark from '@larksuiteoapi/node-sdk';
+import type { OpenClawConfig } from '../types/plugin-sdk-types';
 
 import { getEnabledLarkAccounts } from '../core/accounts';
 import { LarkClient } from '../core/lark-client';

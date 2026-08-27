@@ -1,7 +1,18 @@
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+
+vi.mock('openclaw/plugin-sdk/session-store-runtime', async () => {
+  const { readFileSync } = await import('node:fs');
+  return {
+    resolveStorePath: (storePath: string) => storePath,
+    getSessionEntry: ({ storePath, sessionKey }: { storePath: string; sessionKey: string }) => {
+      const store = JSON.parse(readFileSync(storePath, 'utf8')) as Record<string, unknown>;
+      return store[sessionKey];
+    },
+  };
+});
 import { resolveToolUseDisplayConfig } from '../src/card/tool-use-config';
 
 function createStorePath(testName: string): string {

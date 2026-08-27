@@ -18,10 +18,18 @@
  */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 import { Type } from '@sinclair/typebox';
+import type { OpenClawPluginApi } from '../../../types/plugin-sdk-types';
 
-import { StringEnum, assertLarkOk, createToolContext, handleInvokeErrorWithAutoAuth, json, registerTool } from '../helpers';
+import {
+  StringEnum,
+  assertLarkOk,
+  createToolContext,
+  handleInvokeErrorWithAutoAuth,
+  json,
+  registerTool,
+  resolveRequiredIdAlias,
+} from '../helpers';
 import type { PaginatedData } from '../sdk-types';
 
 // ---------------------------------------------------------------------------
@@ -316,7 +324,7 @@ export function registerFeishuBitableAppTableRecordTool(api: OpenClawPluginApi):
                 });
               }
 
-              log.info(`create: app_token=${(p.app_id ?? (p.app_id ?? p.app_token))}, table_id=${p.table_id}`);
+              log.info(`create: app_token=${resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token')}, table_id=${p.table_id}`);
 
               const res = await client.invoke(
                 'feishu_bitable_app_table_record.create',
@@ -324,7 +332,7 @@ export function registerFeishuBitableAppTableRecordTool(api: OpenClawPluginApi):
                   sdk.bitable.appTableRecord.create(
                     {
                       path: {
-                        app_token: (p.app_id ?? (p.app_id ?? p.app_token)),
+                        app_token: resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token'),
                         table_id: p.table_id,
                       },
                       params: {
@@ -368,7 +376,7 @@ export function registerFeishuBitableAppTableRecordTool(api: OpenClawPluginApi):
                 });
               }
 
-              log.info(`update: app_token=${(p.app_id ?? (p.app_id ?? p.app_token))}, table_id=${p.table_id}, record_id=${p.record_id}`);
+              log.info(`update: app_token=${resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token')}, table_id=${p.table_id}, record_id=${p.record_id}`);
 
               const res = await client.invoke(
                 'feishu_bitable_app_table_record.update',
@@ -376,7 +384,7 @@ export function registerFeishuBitableAppTableRecordTool(api: OpenClawPluginApi):
                   sdk.bitable.appTableRecord.update(
                     {
                       path: {
-                        app_token: (p.app_id ?? (p.app_id ?? p.app_token)),
+                        app_token: resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token'),
                         table_id: p.table_id,
                         record_id: p.record_id,
                       },
@@ -404,7 +412,7 @@ export function registerFeishuBitableAppTableRecordTool(api: OpenClawPluginApi):
             // DELETE
             // -----------------------------------------------------------------
             case 'delete': {
-              log.info(`delete: app_token=${(p.app_id ?? (p.app_id ?? p.app_token))}, table_id=${p.table_id}, record_id=${p.record_id}`);
+              log.info(`delete: app_token=${resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token')}, table_id=${p.table_id}, record_id=${p.record_id}`);
 
               const res = await client.invoke(
                 'feishu_bitable_app_table_record.delete',
@@ -412,7 +420,7 @@ export function registerFeishuBitableAppTableRecordTool(api: OpenClawPluginApi):
                   sdk.bitable.appTableRecord.delete(
                     {
                       path: {
-                        app_token: (p.app_id ?? (p.app_id ?? p.app_token)),
+                        app_token: resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token'),
                         table_id: p.table_id,
                         record_id: p.record_id,
                       },
@@ -465,7 +473,7 @@ export function registerFeishuBitableAppTableRecordTool(api: OpenClawPluginApi):
               }
 
               log.info(
-                `batch_create: app_token=${(p.app_id ?? (p.app_id ?? p.app_token))}, table_id=${p.table_id}, records_count=${p.records.length}`,
+                `batch_create: app_token=${resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token')}, table_id=${p.table_id}, records_count=${p.records.length}`,
               );
 
               const res = await client.invoke(
@@ -474,7 +482,7 @@ export function registerFeishuBitableAppTableRecordTool(api: OpenClawPluginApi):
                   sdk.bitable.appTableRecord.batchCreate(
                     {
                       path: {
-                        app_token: (p.app_id ?? (p.app_id ?? p.app_token)),
+                        app_token: resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token'),
                         table_id: p.table_id,
                       },
                       params: {
@@ -532,7 +540,7 @@ export function registerFeishuBitableAppTableRecordTool(api: OpenClawPluginApi):
               }
 
               log.info(
-                `batch_update: app_token=${(p.app_id ?? (p.app_id ?? p.app_token))}, table_id=${p.table_id}, records_count=${p.records.length}`,
+                `batch_update: app_token=${resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token')}, table_id=${p.table_id}, records_count=${p.records.length}`,
               );
 
               const res = await client.invoke(
@@ -541,7 +549,7 @@ export function registerFeishuBitableAppTableRecordTool(api: OpenClawPluginApi):
                   sdk.bitable.appTableRecord.batchUpdate(
                     {
                       path: {
-                        app_token: (p.app_id ?? (p.app_id ?? p.app_token)),
+                        app_token: resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token'),
                         table_id: p.table_id,
                       },
                       params: {
@@ -581,7 +589,7 @@ export function registerFeishuBitableAppTableRecordTool(api: OpenClawPluginApi):
               }
 
               log.info(
-                `batch_delete: app_token=${(p.app_id ?? (p.app_id ?? p.app_token))}, table_id=${p.table_id}, record_ids_count=${p.record_ids.length}`,
+                `batch_delete: app_token=${resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token')}, table_id=${p.table_id}, record_ids_count=${p.record_ids.length}`,
               );
 
               const res = await client.invoke(
@@ -590,7 +598,7 @@ export function registerFeishuBitableAppTableRecordTool(api: OpenClawPluginApi):
                   sdk.bitable.appTableRecord.batchDelete(
                     {
                       path: {
-                        app_token: (p.app_id ?? (p.app_id ?? p.app_token)),
+                        app_token: resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token'),
                         table_id: p.table_id,
                       },
                       data: {
@@ -615,7 +623,7 @@ export function registerFeishuBitableAppTableRecordTool(api: OpenClawPluginApi):
             // -----------------------------------------------------------------
             case 'list': {
               log.info(
-                `list: app_token=${(p.app_id ?? (p.app_id ?? p.app_token))}, table_id=${p.table_id}, view_id=${p.view_id ?? 'none'}, field_names=${p.field_names?.length ?? 0}, filter=${p.filter ? 'yes' : 'no'}`,
+                `list: app_token=${resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token')}, table_id=${p.table_id}, view_id=${p.view_id ?? 'none'}, field_names=${p.field_names?.length ?? 0}, filter=${p.filter ? 'yes' : 'no'}`,
               );
 
               const searchData: any = {};
@@ -648,7 +656,7 @@ export function registerFeishuBitableAppTableRecordTool(api: OpenClawPluginApi):
                   sdk.bitable.appTableRecord.search(
                     {
                       path: {
-                        app_token: (p.app_id ?? (p.app_id ?? p.app_token)),
+                        app_token: resolveRequiredIdAlias(p.app_id, p.app_token, 'app_id', 'app_token'),
                         table_id: p.table_id,
                       },
                       params: {

@@ -9,9 +9,9 @@
  * Feishu channel config only retains UI-level detail (`showFullPaths`).
  */
 
-import type { ClawdbotConfig } from '../types/plugin-sdk-types';
 import { resolveDefaultAgentId } from 'openclaw/plugin-sdk/agent-runtime';
-import { loadSessionStore, resolveSessionStoreEntry, resolveStorePath } from 'openclaw/plugin-sdk/config-runtime';
+import { getSessionEntry, resolveStorePath } from 'openclaw/plugin-sdk/session-store-runtime';
+import type { ClawdbotConfig } from '../types/plugin-sdk-types';
 import type { FeishuConfig } from '../core/types';
 
 export type ToolUseMode = 'off' | 'on' | 'full';
@@ -58,14 +58,13 @@ function resolveSessionVerboseMode(cfg: ClawdbotConfig, sessionKey: string, agen
     const cfgWithSession = cfg as { session?: { store?: string }; sessions?: { store?: string } };
     const sessionStorePath = cfgWithSession.session?.store ?? cfgWithSession.sessions?.store;
     const storePath = resolveStorePath(sessionStorePath, { agentId });
-    const store = loadSessionStore(storePath);
     const candidateKeys = resolveCandidateSessionKeys(cfg, sessionKey);
 
     for (const candidateKey of candidateKeys) {
-      const resolved = resolveSessionStoreEntry({ store, sessionKey: candidateKey });
-      const mode = normalizeToolUseMode(resolved.existing?.verboseLevel);
+      const existing = getSessionEntry({ storePath, sessionKey: candidateKey, agentId });
+      const mode = normalizeToolUseMode(existing?.verboseLevel);
       if (mode) return mode;
-      if (resolved.existing) return undefined;
+      if (existing) return undefined;
     }
     return undefined;
   } catch {
